@@ -16,14 +16,14 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("register")
+    @PostMapping("register")
     public Response register(@RequestParam String name) {
         int count = userRepository.register(name);
 
         return new Response("OK", count);
     }
 
-    @GetMapping("delete")
+    @DeleteMapping("delete")
     public void delete(@RequestParam String name) {
         userRepository.delete(name);
     }
