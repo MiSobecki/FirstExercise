@@ -11,21 +11,17 @@ import java.util.stream.Collectors;
 @Repository
 public class UserRepository {
 
-    private final HashMap<String, Integer> userRegisters = new HashMap<>();
+    private final Map<String, Integer> userRegisters = new HashMap<>();
 
     public int register(String user) {
-        Integer returnedValue =
-                userRegisters.put(user, userRegisters.get(user) != null ? userRegisters.get(user) + 1 : 1);
-
-        if (returnedValue != null) return returnedValue + 1;
-        else return 1;
+        return userRegisters.merge(user, 1, Integer::sum);
     }
 
     public void delete(String user) {
         userRegisters.remove(user);
     }
 
-    public LinkedHashMap<String, Integer> getAllUsers() {
+    public Map<String, Integer> getAllUsers() {
         return userRegisters.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
@@ -36,7 +32,7 @@ public class UserRepository {
                         LinkedHashMap::new));
     }
 
-    public LinkedHashMap<String, Integer> getTopUsers() {
+    public Map<String, Integer> getTopUsers() {
         return userRegisters.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
@@ -48,7 +44,7 @@ public class UserRepository {
                         LinkedHashMap::new));
     }
 
-    public LinkedHashMap<String, Integer> getAllUsersInsensitive() {
+    public Map<String, Integer> getAllUsersInsensitive() {
         return userRegisters.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))

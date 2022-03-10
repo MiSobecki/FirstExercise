@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import sobecki.michal.ex1.model.Response;
 import sobecki.michal.ex1.repository.UserRepository;
 
-import java.util.LinkedHashMap;
+import java.util.Map;
 
 @RestController
 public class UserController {
@@ -29,19 +29,12 @@ public class UserController {
     }
 
     @GetMapping("stats")
-    public LinkedHashMap<String, Integer> getUsers(@RequestParam(required = false) String mode) {
-        if (mode == null) return userRepository.getTopUsers();
-
+    public Map<String, Integer> getUsers(@RequestParam(required = false, defaultValue = "SHORT") Mode mode) {
         return switch (mode) {
-            case "ALL" -> userRepository.getAllUsers();
-            case "IGNORE_CASE" -> userRepository.getAllUsersInsensitive();
-            default -> throw new IllegalArgumentException("There is no such mode");
+            case ALL -> userRepository.getAllUsers();
+            case IGNORE_CASE -> userRepository.getAllUsersInsensitive();
+            case SHORT -> userRepository.getTopUsers();
         };
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public String handleWrongModeArgument(IllegalArgumentException ex) {
-        return ex.getMessage();
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
